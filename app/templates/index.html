@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Mirsaidov Saidkamol" />
+    <title>{{ title }}</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 2rem;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .button-link {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+      }
+
+      .button-link:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to {{ title }} by {{ author }}</h1>
+    <p>Choose documentation format:</p>
+
+    <div class="button-group">
+      <a href="/docs" class="button-link">Swagger UI</a>
+      <a href="/redoc" class="button-link">Redoc</a>
+    </div>
+  </body>
+</html>
