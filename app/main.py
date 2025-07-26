@@ -1,4 +1,5 @@
 import uvicorn
+import logging
 
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -43,8 +44,15 @@ async def root(request: Request):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=settings.logging.log_level_value,
+        format=settings.logging.log_format,
+        datefmt=settings.logging.log_date_format,
+        # filename=settings.logging.log_file,
+    )
+
     uvicorn.run(
-        "run:app",
+        "main:app",
         host=settings.run.host,
         port=settings.run.port,
         reload=settings.run.reload,

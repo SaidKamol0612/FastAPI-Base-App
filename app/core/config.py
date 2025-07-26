@@ -1,4 +1,6 @@
 import logging
+
+from pathlib import Path
 from typing import Literal
 
 from pydantic import AmqpDsn
@@ -13,6 +15,7 @@ from pydantic_settings import (
 LOG_DEFAULT_FORMAT = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 )
+CERTIFICATE_DIR = Path(__file__).parent.parent / "certs/"
 
 
 class RunConfig(BaseModel):
@@ -21,6 +24,14 @@ class RunConfig(BaseModel):
 
     # It should be set to False in production
     reload: bool = False
+
+
+class JWTConfig(BaseModel):
+    private_key_path: Path = CERTIFICATE_DIR / "jwt-private.pem"
+    public_key_path: Path = CERTIFICATE_DIR / "jwt-public.pem"
+
+    algorithm: str = "RS256"
+    expires_minutes: int = 60
 
 
 class LoggingConfig(BaseModel):
@@ -69,6 +80,7 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
     )
+    jwt: JWTConfig = JWTConfig()
     run: RunConfig = RunConfig()
     logging: LoggingConfig = LoggingConfig()
     api: ApiInfo
