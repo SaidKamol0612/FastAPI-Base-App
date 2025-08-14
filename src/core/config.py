@@ -12,7 +12,7 @@ from pydantic_settings import (
 )
 
 
-LOG_DEFAULT_FORMAT = (
+DEFAULT_FORMAT = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 )
 CERTIFICATE_DIR = Path(__file__).parent.parent / "certs/"
@@ -42,19 +42,26 @@ class LoggingConfig(BaseModel):
         "error",
         "critical",
     ] = "info"
-    log_format: str = LOG_DEFAULT_FORMAT
-    log_date_format: str = "%Y-%m-%d %H:%M:%S"
+    format: str = DEFAULT_FORMAT
+    date_format: str = "%Y-%m-%d %H:%M:%S"
+    log_file: None | str = None
 
     @property
     def log_level_value(self) -> int:
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
+class ApiV1Prefix(BaseModel):
+    prefix: str = "/v1"
+    users: str = "/users"
+
+
 class ApiInfo(BaseModel):
+    title: str = "Template FastAPI App"
+    desc: str = "Simple CRM system."
+
     prefix: str = "/api"
-    title: str
-    description: str
-    version: str = "1.0.0"
+    v1: ApiV1Prefix = ApiV1Prefix()
 
 
 class DatabaseConfig(BaseModel):
