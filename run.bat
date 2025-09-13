@@ -1,0 +1,3 @@
+@echo off
+echo Starting FastAPI-Base-App...
+poetry run start
