@@ -1,0 +1,30 @@
+[project]
+name = "fastapi-base-app"
+version = "0.1.0"
+description = "Base FastAPI project template"
+authors = [
+    {name = "Saidkamol",email = "kamolsaid2006@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi (>=0.116.1,<0.117.0)",
+    "uvicorn (>=0.35.0,<0.36.0)",
+    "sqlalchemy (>=2.0.43,<3.0.0)",
+    "aiosqlite (>=0.21.0,<0.22.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "pydantic-settings (>=2.10.1,<3.0.0)",
+    "orjson (>=3.11.3,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "*", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+start = "src.run:main"
