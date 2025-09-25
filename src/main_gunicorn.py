@@ -1,14 +1,17 @@
-import sys
-import uvicorn
-
 from core.config import settings
-from main_uvicorn import main_app
+from app import create_app
+
+
+main_app = create_app(create_custom_static_urls=False)
 
 
 def guniorn_run():
+    """
+    Run the application with Gunicorn.
+    """
+
     from core.gunicorn import Application, get_app_options
 
-    # Other → gunicorn
     Application(
         application=main_app,
         options=get_app_options(

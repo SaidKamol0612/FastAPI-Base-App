@@ -12,17 +12,14 @@ logging.basicConfig(
     format=settings.logging.log_format,
 )
 
-main_app = create_app(
-    create_custom_static_urls=True,
-)
-
-
-@main_app.get("/")
-async def root():
-    return {"msg": "Hello, world!"}
+main_app = create_app(create_custom_static_urls=False)
 
 
 def uvicorn_run():
+    """
+    Run the application with Uvicorn.
+    """
+
     uvicorn.run(
         "main_uvicorn:main_app",
         host=settings.run.host,
