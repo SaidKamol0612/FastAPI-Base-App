@@ -1,31 +1,43 @@
+# standard libraries
 import logging
 from pathlib import Path
 from typing import Literal
+
+# external libraries
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-ENV_FILES = (
-    BASE_DIR / ".env.template",
-    BASE_DIR / ".env",
-)
+LOG_FILE_PATH = BASE_DIR / "logs" / "app.log"
 LOG_DEFAULT_FORMAT = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 )
 
-WORKER_LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d][%(processName)s] %(module)16s:%(lineno)-3d %(levelname)-7s - %(message)s"
+
+class ApiV1Prefix(BaseModel):
+    prefix: str = "/v1"
+    user_prefix: str = "/users"
 
 
-class RunConfig(BaseModel):
-    host: str = "0.0.0.0"
-    port: int = 8000
+class ApiPrefix(BaseModel):
+    prefix: str = "/api"
+    v1: ApiV1Prefix = ApiV1Prefix()
 
-    # NOTE: don't run with debug turned on in production
-    debug: bool = True
 
-    @property
-    def reload(self) -> bool:
-        return self.debug
+class DatabaseConfig(BaseModel):
+    url: PostgresDsn | str
+    echo: bool = False
+    echo_pool: bool = False
+    pool_size: int = 50
+    max_overflow: int = 10
+
+    naming_convention: dict[str, str] = {
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_N_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
+    }
 
 
 class GunicornConfig(BaseModel):
@@ -52,44 +64,30 @@ class LoggingConfig(BaseModel):
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
-class ApiV1Prefix(BaseModel):
-    prefix: str = "/v1"
-    users: str = "/users"
+class RunConfig(BaseModel):
+    host: str = "0.0.0.0"
+    port: int = 8000
 
+    # NOTE: don't run with debug turned on in production
+    debug: bool = True
 
-class ApiPrefix(BaseModel):
-    prefix: str = "/api"
-    v1: ApiV1Prefix = ApiV1Prefix()
-
-
-class DatabaseConfig(BaseModel):
-    url: PostgresDsn | str
-    echo: bool = False
-    echo_pool: bool = False
-    pool_size: int = 50
-    max_overflow: int = 10
-
-    naming_convention: dict[str, str] = {
-        "ix": "ix_%(column_0_label)s",
-        "uq": "uq_%(table_name)s_%(column_0_N_name)s",
-        "ck": "ck_%(table_name)s_%(constraint_name)s",
-        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-        "pk": "pk_%(table_name)s",
-    }
+    @property
+    def reload(self) -> bool:
+        return self.debug
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=ENV_FILES,
+        env_file=(BASE_DIR / ".env"),
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
     )
-    run: RunConfig = RunConfig()
-    gunicorn: GunicornConfig = GunicornConfig()
-    logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
+    gunicorn: GunicornConfig = GunicornConfig()
+    logging: LoggingConfig = LoggingConfig()
+    run: RunConfig = RunConfig()
 
 
 settings = Settings()
