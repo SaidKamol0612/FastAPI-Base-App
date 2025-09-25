@@ -1,11 +1,11 @@
 .PHONY: build run
 
 build:
-	@echo "Building FastSimpleCRM..."
+	@echo "FastAPI-Base-App..."
 	poetry env activate
 	poetry install
 	@echo "Build complete."
 
 run:
-	@echo "Running FastSimpleCRM..."
+	@echo "Running FastAPI-Base-App..."
 	poetry run start
