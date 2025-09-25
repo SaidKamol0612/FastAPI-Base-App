@@ -1,5 +1,5 @@
-import logging
 from contextlib import asynccontextmanager
+import logging
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
@@ -12,6 +12,7 @@ from fastapi.responses import ORJSONResponse
 from starlette.responses import HTMLResponse
 
 from db import db_helper
+from api import router as main_router
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +51,16 @@ def register_static_docs_routes(app: FastAPI) -> None:
         )
 
 
+def include_routers(app: FastAPI) -> None:
+    """Include your API routers here."""
+
+    @app.get("/")
+    async def root() -> dict:
+        return {"message": "Hello, World!"}
+
+    app.include_router(main_router)
+
+
 def create_app(
     create_custom_static_urls: bool = False,
 ) -> FastAPI:
@@ -61,4 +72,7 @@ def create_app(
     )
     if create_custom_static_urls:
         register_static_docs_routes(app)
+
+    include_routers(app)
+
     return app
