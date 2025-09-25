@@ -1,17 +1,15 @@
-"""
-Taken from
-https://github.com/mahenzon/ri-sdk-python-wrapper/blob/master/ri_sdk_codegen/utils/case_converter.py
-"""
-
-
 def camel_case_to_snake_case(input_str: str) -> str:
     """
+    Convert CamelCase string to snake_case string.
     >>> camel_case_to_snake_case("SomeSDK")
     'some_sdk'
     >>> camel_case_to_snake_case("RServoDrive")
     'r_servo_drive'
     >>> camel_case_to_snake_case("SDKDemo")
     'sdk_demo'
+
+    Taken from
+    https://github.com/mahenzon/ri-sdk-python-wrapper/blob/master/ri_sdk_codegen/utils/case_converter.py
     """
     chars = []
     for c_idx, char in enumerate(input_str):
