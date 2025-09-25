@@ -23,9 +23,9 @@ class Application(BaseApplication):
             # for each option
             for k, v in self.options.items()
             # not empty key / value
-            if k in self.cfg.settings and v is not None # type: ignore
+            if k in self.cfg.settings and v is not None  # type: ignore
         }
 
     def load_config(self):
         for key, value in self.config_options.items():
-            self.cfg.set(key.lower(), value) # type: ignore
+            self.cfg.set(key.lower(), value)  # type: ignore
