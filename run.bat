@@ -1,3 +1,3 @@
 @echo off
 echo Starting FastAPI-Base-App...
-poetry run start
+cd src && poetry run python run.py
