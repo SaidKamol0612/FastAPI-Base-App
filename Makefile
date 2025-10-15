@@ -1,11 +1,10 @@
 .PHONY: build run
 
 build:
-	@echo "FastAPI-Base-App..."
-	poetry env activate
+	@echo "Building FastAPIBaseApp..."
 	poetry install
 	@echo "Build complete."
 
 run:
-	@echo "Running FastAPI-Base-App..."
-	poetry run start
+	@echo "Running FastAPIBaseApp..."
+	cd src && poetry run python run.py
