@@ -10,6 +10,8 @@ from sqlalchemy.ext.asyncio import (
 
 from core.config import settings
 
+from .models import Base
+
 log = logging.getLogger(__name__)
 
 
@@ -36,13 +38,17 @@ class DatabaseHelper:
             expire_on_commit=False,
         )
 
-    async def dispose(self) -> None:
-        await self.engine.dispose()
-        log.info("Database engine disposed")
+    async def init_models(self):
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             yield session
+
+    async def dispose(self) -> None:
+        await self.engine.dispose()
+        log.info("Database engine disposed")
 
 
 db_helper = DatabaseHelper(
