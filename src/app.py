@@ -1,6 +1,6 @@
-from contextlib import asynccontextmanager
 import logging
-from typing import AsyncGenerator
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator, Dict
 
 from fastapi import FastAPI
 from fastapi.openapi.docs import (
@@ -11,8 +11,9 @@ from fastapi.openapi.docs import (
 from fastapi.responses import ORJSONResponse
 from starlette.responses import HTMLResponse
 
-from db import db_helper
 from api import router as main_router
+from core.error import add_exception_handlers
+from db import db_helper
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ log = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # startup
+    await db_helper.init_models()
 
     yield
     # shutdown
@@ -28,7 +30,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 def register_static_docs_routes(app: FastAPI) -> None:
-    @app.get("/docs", include_in_schema=False)
     async def custom_swagger_ui_html() -> HTMLResponse:
         return get_swagger_ui_html(
             openapi_url=str(app.openapi_url),
@@ -38,9 +39,16 @@ def register_static_docs_routes(app: FastAPI) -> None:
             swagger_css_url="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css",
         )
 
-    @app.get(str(app.swagger_ui_oauth2_redirect_url), include_in_schema=False)
+    app.add_api_route("/docs", custom_swagger_ui_html, include_in_schema=False)
+
     async def swagger_ui_redirect() -> HTMLResponse:
         return get_swagger_ui_oauth2_redirect_html()
+
+    app.add_api_route(
+        str(app.swagger_ui_oauth2_redirect_url),
+        swagger_ui_redirect,
+        include_in_schema=False,
+    )
 
     @app.get("/redoc", include_in_schema=False)
     async def redoc_html() -> HTMLResponse:
@@ -50,14 +58,16 @@ def register_static_docs_routes(app: FastAPI) -> None:
             redoc_js_url="https://unpkg.com/redoc@next/bundles/redoc.standalone.js",
         )
 
+    app.add_api_route("/redoc", redoc_html, include_in_schema=False)
 
-def include_routers(app: FastAPI) -> None:
-    """Include your API routers here."""
 
-    @app.get("/")
-    async def root() -> dict:
+def config_app(app: FastAPI) -> None:
+    add_exception_handlers(app=app)
+
+    async def root() -> Dict[str, str]:
         return {"message": "Hello, World!"}
 
+    app.add_api_route("/", root)
     app.include_router(main_router)
 
 
@@ -73,6 +83,6 @@ def create_app(
     if create_custom_static_urls:
         register_static_docs_routes(app)
 
-    include_routers(app)
+    config_app(app)
 
     return app
