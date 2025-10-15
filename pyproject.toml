@@ -17,14 +17,11 @@ dependencies = [
     "orjson (>=3.11.3,<4.0.0)"
 ]
 
+
 [tool.poetry]
-packages = [{include = "*", from = "src"}]
+package-mode = false
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.poetry.scripts]
-start = "src.run:main"
