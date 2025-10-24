@@ -7,5 +7,5 @@ __all__ = (
 )
 
 from .integrity_error_parser import parse_integrity_error
-from .errors import BadRequestError, ForbiddenError, NotFoundError
+from .exceptions import BadRequestError, ForbiddenError, NotFoundError
 from .handler import add_exception_handlers
