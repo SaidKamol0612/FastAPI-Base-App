@@ -4,7 +4,7 @@ from types import FunctionType
 
 from sqlalchemy.exc import IntegrityError
 
-from .error import parse_integrity_error, BadRequestError
+from .exception import parse_integrity_error, BadRequestError
 
 
 def parse_integrity_to_bad_req(func):

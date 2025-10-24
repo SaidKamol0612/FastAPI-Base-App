@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
-from core.error import NotFoundError
+from core.exception import NotFoundError
 from db.repositories import user_repo
 
 if TYPE_CHECKING:

@@ -89,4 +89,4 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
 
 
-settings = Settings() # type: ignore
+settings = Settings()  # type: ignore

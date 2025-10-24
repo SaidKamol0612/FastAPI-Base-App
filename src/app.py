@@ -12,7 +12,7 @@ from fastapi.responses import ORJSONResponse
 from starlette.responses import HTMLResponse
 
 from api import router as main_router
-from core.error import add_exception_handlers
+from core.exception import add_exception_handlers
 from db import db_helper
 
 log = logging.getLogger(__name__)
