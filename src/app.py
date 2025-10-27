@@ -21,7 +21,6 @@ log = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # startup
-    await db_helper.init_models()
 
     yield
     # shutdown
