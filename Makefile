@@ -1,10 +1,7 @@
-# Makefile for LekosEPR-API
-# Usage examples:
-# * make build — install dependencies and apply migrations
-# * make run — launch the application
-# * make deploy — build and launch from a clean state
-
 .PHONY: migrate build run deploy clean
+
+
+APP_TITLE="FastAPI-Base-App by SaidKamol0612."
 
 # -----------------------------
 # 1️⃣  Migrations
@@ -23,19 +20,18 @@ build:
 	@echo "✅ Build complete."
 
 # -----------------------------
-# 3️⃣  Run project
+# 3️⃣.1  Run app via Uvicorn
 # -----------------------------
-run:
-	@echo "▶️  Starting LekosEPR-API..."
-	PYTHONPATH=src poetry run python -m src.run
+uvicorn_run:
+	@echo "Running ${APP_TITLE} via Uvicorn..."
+	PYTHONPATH=src poetry run python -m src.main
 
 # -----------------------------
-# 4️⃣  Deploy (build + run)
+# 3️⃣.2 Run app via Gunicorn
 # -----------------------------
-deploy:
-	@echo "🚀 Deploying LekosEPR-API..."
-	$(MAKE) build
-	$(MAKE) run
+gunicorn_run:
+	@echo "Running ${APP_TITLE} via Gunicorn..."
+	PYTHONPATH=src poetry run python -m src.run
 
 # -----------------------------
 # 5️⃣  Clean temporary files
