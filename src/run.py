@@ -1,16 +1,25 @@
-import sys
+from __future__ import annotations
 
-from main_gunicorn import guniorn_run
-from main_uvicorn import uvicorn_run
+from core import settings
+from core.gunicorn import get_app_options, Application
+from main import main_app
 
-def main():
-    if sys.platform == "win32":
-        # Windows → uvicorn
-        uvicorn_run()
-    else:
-        # Other → gunicorn
-        guniorn_run()
+
+def run_gunicorn():
+    """
+    Run FastAPI app with Gunicorn.
+    """
+
+    options = get_app_options(
+        host=settings.run.host,
+        port=settings.run.port,
+        timeout=settings.gunicorn.timeout,
+        workers=settings.gunicorn.resolved_workers,
+        log_level=settings.logging.level,
+    )
+
+    Application(main_app, options).run()
 
 
 if __name__ == "__main__":
-    main()
+    run_gunicorn()
