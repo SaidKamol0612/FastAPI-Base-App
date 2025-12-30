@@ -1,9 +1,12 @@
-from __future__ import annotations
+"""
+Main entrance to the application.
+To run it through Uvicorn, use the command ```python main.py```.
+"""
 
 import uvicorn
 
 from app import create_and_setup_app
-from core.config import settings
+from core import settings
 
 
 main_app = create_and_setup_app(create_custom_static_urls=False)

@@ -1,7 +1,4 @@
-from __future__ import annotations
-
-from core import settings
-from core.gunicorn import get_app_options, Application
+from core import settings, get_app_options, Application
 from main import main_app
 
 
