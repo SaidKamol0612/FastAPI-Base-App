@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import multiprocessing
 from logging import Formatter
 from typing import Any, Dict, Mapping, Callable
