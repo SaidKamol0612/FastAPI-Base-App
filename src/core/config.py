@@ -73,12 +73,13 @@ class DatabaseSettings(BaseModel):
                     raise ValueError("Missing required DB connection info")
                 return f"{self.db_type}+{self.db_driver}://{self.db_user}:{self.db_pass}@{self.db_host}:{self.db_port}/{self.db_name}"
 
+        def __str__(self) -> str:
+            return self.resolved_url
+
     url: DBURLSetting = Field(default_factory=DBURLSetting)
     echo: bool = False
-    echo_pool: bool = False
     pool_size: int = 50
     max_overflow: int = 10
-    pool_pre_ping: bool = True
 
     naming_convention: dict[str, str] = {
         "ix": "ix_%(column_0_label)s",
